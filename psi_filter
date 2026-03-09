@@ -1,0 +1,36 @@
+import numpy as np
+from sklearn.decomposition import PCA
+from scipy.optimize import minimize
+
+class PsiFilter:
+    def __init__(self, dim=216, omega=2*np.pi*0.1, gamma=0.05, hurst=0.8, variance=0.2):
+        self.dim = dim
+        self.omega = omega
+        self.gamma = gamma
+        self.hurst = hurst
+        self.variance = variance
+        self.a_i = np.random.uniform(0.5, 1.5, dim)
+        self.pca = PCA(n_components=3)
+
+    def evolve(self, features_scaled, t):
+        psi = np.zeros((len(t), self.dim))
+        for i in range(self.dim):
+            oscillatory = (np.cos(self.omega * t) + 1j * np.sin(self.omega * t)) * np.exp(-self.gamma * t)
+            turbulence = self.hurst * features_scaled[:, 0] * np.random.normal(0, self.variance, len(t))
+            psi[:, i] = self.a_i[i] * np.real(oscillatory) * features_scaled[:, i % features_scaled.shape[1]] + turbulence
+        return psi
+
+    def reduce(self, psi):
+        return self.pca.fit_transform(psi)
+
+    def optimize_parameters(self, features_scaled, t):
+        def objective(x):
+            self.gamma = x[0]
+            self.omega = x[1]
+            psi = self.evolve(features_scaled, t)
+            reduced = self.reduce(psi)
+            return np.std(reduced[:, 0])
+        bounds = [(0.01, 0.2), (0.1, 2*np.pi)]
+        result = minimize(objective, [self.gamma, self.omega], bounds=bounds, method='L-BFGS-B')
+        self.gamma, self.omega = result.x
+        return result.fun
