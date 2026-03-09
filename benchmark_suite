@@ -1,0 +1,21 @@
+# benchmark_suite.txt (open in Jupyter later if you want)
+
+import numpy as np
+import matplotlib.pyplot as plt
+from psi_filter import PsiFilter
+
+t = np.linspace(0, 10, 1000)
+features = np.random.randn(1000, 2)
+features_scaled = (features - features.mean(0)) / features.std(0)
+
+filter = PsiFilter(dim=216)
+
+psi = filter.evolve(features_scaled, t)
+reduced = filter.reduce(psi)
+
+plt.plot(t, reduced[:, 0])
+plt.title('Ψ_universe Attractor Benchmark')
+plt.show()
+
+stability = filter.optimize_parameters(features_scaled, t)
+print("Stability:", stability)
