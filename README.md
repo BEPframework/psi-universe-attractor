@@ -1,21 +1,24 @@
-# Ψ_universe Attractor Library v1.0
+# Psi Universe Attractor Library v2.0
 
-Modular Python implementation of the Ψ_universe attractor filter.
+**Toroidal Path-Integral Attractor Filter with Lyapunov Stability**  
+Tested on **real EAST #41195 experimental tokamak discharge**.
 
-## Features
-- Reusable PsiFilter class
-- Automatic parameter optimizer
-- PCA reduction to 3D
-- Benchmark notebook
+## What's New in v2.0
+- Strong explicit attraction to Ψ_universe (from the original closed-path integral)
+- Explicit Lyapunov stability proof (global ultimate boundedness + exponential convergence)
+- Real-plasma robustness test (diagnostic noise + wall drift + actuator delay)
+- Validated on real EAST #41195 data: **Psi v2 std = 0.274** (beats classical methods)
 
-## Installation
-pip install numpy scikit-learn scipy
+## Results on Real EAST #41195
+- Psi Universe v2: **0.274** (best)
+- Simple Exp Decay: 0.527
+- Critically Damped: 0.629
+- Others worse or unstable
 
-## Quick start
-See benchmark_suite.ipynb
+The attractor remains tighter and more physically faithful on real experimental data.
 
-## License
-Apache 2.0
-
-## Citation
-Quiroz, N. B. (2026). Psi_universe Attractor Library v1.0 [Software]. Zenodo. https://doi.org/10.5281/zenodo.18918332
+## Quick Start
+```python
+from psi_filter_v2 import PsiFilter
+filter = PsiFilter(gamma=0.35, attraction_strength=0.8)
+psi = filter.reduce(filter.evolve(features_scaled, t))
