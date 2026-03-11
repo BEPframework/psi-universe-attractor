@@ -72,3 +72,11 @@ Licensed under the **Apache License, Version 2.0**
 ## Preprint Note
 
 This is an open-source research artifact. A full technical preprint with detailed derivations, multi-shot analysis, and additional EAST discharges will be linked in future versions. Feedback and real-shot collaborations are welcome.
+
+## Keywords:
+tokamak
+fusion energy
+plasma physics
+toroidal plasma
+magnetic confinement
+plasma attractor dynamics
