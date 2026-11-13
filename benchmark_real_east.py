@@ -19,7 +19,11 @@ delayed_signal[:2] = wall_signal[:2]
 
 features_scaled = (delayed_signal.reshape(-1, 1) - delayed_signal.mean()) / delayed_signal.std()
 
-# Run comparison (same as before)
-attractors = { ... }  # (I can expand this if you want, but the plot you already have is fine)
+# Run Psi v2 only. The baseline attractors used in an earlier, unpublished
+# comparison are not included in this repository, so no ranking is claimed here.
+psi_filter = PsiFilter(gamma=0.35, attraction_strength=0.8)
+psi_output = psi_filter.reduce(psi_filter.evolve(features_scaled, t))
 
-print("Real EAST test complete — Psi v2 wins with std=0.274")
+print(f"Psi v2 output std: {np.std(psi_output):.3f}")
+print("Note: std of the output rewards shrinkage toward zero; it is not a tracking-error metric.")
+print("Baseline comparison not included; see README 'Status of Results'.")
